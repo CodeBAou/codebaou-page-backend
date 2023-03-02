@@ -1,14 +1,16 @@
 const {Router} = require('express');
 const router   = Router();
-const {obtenerProyecto, guardarProyecto, actualizarProyecto, eliminarProyecto} = require('../controllers/proyectos');
+const {obtenerProyecto, obtenerProyectos, crearProyecto, actualizarProyecto, eliminarProyecto} = require('../controllers/proyectos');
 
 //Aqui se guarda una coleccion de rutas para el apartado proyectos
-router.get('/', obtenerProyecto);
+router.get('/:id', obtenerProyecto);
 
-router.post('/', guardarProyecto);
+router.get('/', obtenerProyectos);
 
-router.put('/', actualizarProyecto);
+router.post('/', crearProyecto);
 
-router.delete('/', eliminarProyecto);
+router.put('/:id', actualizarProyecto);
+
+router.delete('/:id', eliminarProyecto);
 
 module.exports = router;

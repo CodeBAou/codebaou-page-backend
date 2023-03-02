@@ -1,14 +1,16 @@
 const {Router} = require('express');
 const router = Router();
-const {obtenerNotas, guardarNota, actualizarNota, eliminarNota} = require('../controllers/notas');
+const {obtenerNota,obtenerNotas, CrearNota, actualizarNota, eliminaNota} = require('../controllers/notas');
 
 //Aqui se guarda una coleccion de rutas para el apartado notas
+router.get('/:id', obtenerNota);
+
 router.get('/', obtenerNotas);
 
-router.post('/', guardarNota);
+router.post('/', CrearNota);
 
-router.put('/', actualizarNota);
+router.put('/:id', actualizarNota);
 
-router.delete('/', eliminarNota);
+router.delete('/:id', eliminaNota);
 
 module.exports = router;

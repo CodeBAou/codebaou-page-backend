@@ -1,42 +1,89 @@
-const {response} = require('express');
+const {request,response} = require('express');
+const {model_proyectos} = require('../models');
 
-const obtenerProyecto = (req, res=response) => {
+const obtenerProyecto = async (req, res=response) => {
     
-    res.json({
-        msg:'controllers proyectos Get'
+    const id = req.params.id;
+
+    await model_proyectos.findById( req.params.id )
+    .then( proyecto => {
+        res.status(200).json(proyecto);
     })
+    .catch( err => {
+        res.status(500).json(err);
+    });
 }
 
-const guardarProyecto = (req, res=response) => {
+const obtenerProyectos = async (req=request, res=response) => {
     
-    const body = req.body;
+    const { desde,limite} = req.query;
 
-    res.json({
-        msg:'controllers proyectos Post'
+    await model_proyectos.find().skip(desde).limit(limite)
+    .then( proyectos => {
+        res.status(200).json(proyectos);
     })
+    .catch( err => {    
+        res.status(500).json({
+            msg:"Error al realizar la consulta en la base de datos",
+            err
+        });
+    });
 }
 
-const actualizarProyecto = (req, res=response) => {
+const crearProyecto = async (req=request, res=response) => {
     
-    const body = req.body;
+    const proyecto = new model_proyectos(req.body);
 
-    res.json({
-        msg:'controllers proyectos Put'
-    })
+    await proyecto.save( (err,result) => {
+
+        if(err) res.status(500).json({
+            msg:"Error al guardar un nuevo proyecto"
+        });
+
+       res.status(200).json({
+        msg:"Se ha guardado una nueva nota",
+        result
+       });
+
+    });
 }
 
-const eliminarProyecto = (req, res=response) => {
+const actualizarProyecto = async (req, res=response) => {
     
-    const body = req.body;
+    const id = req.params.id;
+    const query = req.body;
+
+    await model_proyectos.findByIdAndUpdate( {_id:id}, query)
+    .then( 
+        result => res.status(200).json(result)
+    )
+    .catch(
+        err => res.status(500).json(err)
+    );
+
     
-    res.json({
-        msg:'controllers proyectos Delete'
-    })
+}
+
+const eliminarProyecto = async (req, res=response) => {
+    
+   const id = req.params.id;
+   
+   await model_proyectos.findOneAndDelete( {_id:id})
+   .then( result => {
+        if(!result) res.status(200).json({
+            msg:`No se ha encontrado la nota con id ${id}`
+        });
+        if(result) res.status(200).json(result);
+   })
+   .catch(
+        err => res.status(500).json(err)
+   );
 }
 
 module.exports = {
     obtenerProyecto,
-    guardarProyecto,
+    obtenerProyectos,
+    crearProyecto,
     actualizarProyecto,
     eliminarProyecto
 }

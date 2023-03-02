@@ -1,25 +1,25 @@
-const {Schema} = require('mongoose');
+const {Schema,model} = require('mongoose');
 
 const notasSchema =  new Schema({
     tag:{
         type:String,
         required:[true,'Se necesita indicar el tag']
     },
-    miniatura:newSchema({
+    date:{
+        type:Date,
+        default:Date.now()
+    },
+    miniaturas:{
         imagen:{
-            type:String,
-            required:true
+            type:String
         },
         titulo:{
-            type:String,
-            required:true,
-            unique: true
+            type:String
         },
         descripcion:{
-            type:String,
-            required:true
+            type:String
         }
-    })
+    }
 });
 
-module.exports = {notasSchema};
+module.exports = model('Notas',notasSchema);

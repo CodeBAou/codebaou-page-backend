@@ -1,9 +1,13 @@
-const {Schema} = require('mongoose');
+const {Schema, model} = require('mongoose');
 
 const proyectosSchema = new Schema({
     tag:{
         type:String,
         required:[true,'Se necesita indicar el tag']
+    },
+    date:{
+        type:Date,
+        default:Date.now()
     },
     miniaturas: new Schema({
         imagen: {
@@ -22,4 +26,4 @@ const proyectosSchema = new Schema({
     })
 });
 
-module.exports = {proyectoSchema};
+module.exports = model('Proyecto', proyectosSchema);

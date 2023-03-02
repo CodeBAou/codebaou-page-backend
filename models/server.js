@@ -2,6 +2,7 @@ const express      = require('express');   //paquete express - npm , servidor we
 const cors         = require('cors');   //paquete cors - npm , configuracion rapida de cabeceras http
 const {Conexiondb} = require('../database/config');
 
+
 class Server{
 
     constructor(){
@@ -38,6 +39,7 @@ class Server{
         this.app.use(cors());
         //for parsing application/json
         this.app.use(express.json());
+    
         //for parsing application/x-www-form-urlencoded
        // app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
         //Servir pagina statica en carpeta public (valido para React,Angular)
