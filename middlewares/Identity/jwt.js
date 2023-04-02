@@ -22,8 +22,6 @@ const Identity = async (req=request,res=response,next) => {
             algorithm: "HS256",
             expiresIn: "1h",
         });
-        
-        console.log(jwtstatus);
 
         if(!jwtstatus) res.status(403).json({
             err:'No se ha podido crear el token por un problema interno',
@@ -48,15 +46,10 @@ let getTokenJWT = async (res,user,pass) => {
 //Verifica el token por expiracion
 let VerificaJWT = async (token) => {
     
-    console.log('middleware');
-
     try{
         const decode = JWT.verify(token, process.env.PRIVATEKEYJWT);
-        console.log('token',token);
-        console.log('verifica:', decode);
         next();
     }catch(err){
-        console.log('err');
         return {
             estado:false,
             err:err
@@ -85,8 +78,38 @@ const fnAuxiliar = async (res,data) => {
 }
 
 
+const verificaPermiso = async (req=request,res=response, next) =>{
+    
+    let urlPeticion = req.originalUrl;
+    let metodo      = req.method;
+
+    //Quitamos la auth0 para obtener post
+    if( urlPeticion.includes('private/post/') && metodo =='GET'){
+        next(); 
+    }
+    //quitamos la auth0 para obtener las section
+    else if (urlPeticion.includes('/private/section/') && metodo == 'GET'){
+        next();
+    }
+    //Para el resto de las url comprobamos el token valido de auth0
+    else{
+         //No existe el token?
+        if(!req.headers.authorization){
+            res.json({msg:'no autorizado'});
+        }else{
+            VerificaJWT(req.headers.authorization).then( () => {
+                next();
+            }).catch( () => {
+                res.json({msg:'No autorizado'})
+            });
+        
+        }
+    }
+   
+};
 
 module.exports = {
     Identity,
-    VerificaJWT
+    VerificaJWT,
+    verificaPermiso 
 }

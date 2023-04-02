@@ -4,7 +4,7 @@ const {response, request} = require('express');
 
 const contactoPost = async (req=request, res=response) => {
 
-    const body = req.body;
+    const body = req.body.data;
     
    
     
@@ -34,19 +34,26 @@ const contactoPost = async (req=request, res=response) => {
         text: body.mensaje, // plain "Hello world?"
     };
 
-    //Envio
-    await transporter.sendMail(data, (err,info) =>{
-        if(err) res.status(500).json({
-            msg:"No se ha podido enviar el email",
-            err
+    try{
+        //Envio
+        await transporter.sendMail(data, (err,info) =>{
+            if(err) res.status(500).json({
+                msg:"No se ha podido enviar el email",
+                err
+            });
+
+            if(info) res.status(200).json({
+                msg:"Se ha enviado el email!",
+                info
+            });
         });
 
-        if(info) res.status(200).json({
-            msg:"Se ha enviado el email!",
-            info
+    }catch(err){
+        res.status(500).json({
+            msg:'Se ha producido un error en el servidor',
+            err:err
         });
-    });
-
+    }
     
 }
 
