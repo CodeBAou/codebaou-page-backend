@@ -59,7 +59,7 @@ class Server{
         //Acceder al apartado publico (No es necesario tener auth)    - Servir pagina Estática
         this.app.use('/',express.static('public'));
         //Aceder al apartado privado (se necesita tener el token jwt para que funcione)     - Sevir Pagina Estática
-        this.app.use('/private', express.static('private') );
+      
     }
 
     //Este Método pone el servidor en escucha
