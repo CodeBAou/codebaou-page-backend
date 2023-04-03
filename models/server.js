@@ -43,7 +43,9 @@ class Server{
       
         //Control de errores
         this.app.use(function(err, req, res, next) {
+
             console.error(err.stack," ::middleware::");
+
             res.status(500).send({
                 err:err,
                 msg:"Se ha producido un error en el servidor, compruebe que los datos se han enviado correctamente"
@@ -64,9 +66,19 @@ class Server{
 
     //Este Método pone el servidor en escucha
     listen(){
-        this.app.listen( process.env.PORT, () => {
-            console.log("Servidor corriendo en el puerto:",process.env.PORT);
-        });
+
+        if(process.env.HOSTING === 'AWS'){
+            //Variables de AWS, En AWS existe una variable PORT en el puerto al que el servidor proxy pasa el tráfico. 
+            this.app.listen( process.env.PORT, () => {
+                console.log("Servidor corriendo en el puerto:",process.env.PORT);
+            });
+        }else{//Configuracion para entorno dev local
+            //Puerto por defecto
+            this.app.listen( process.env.DEFAULT_PORT, () => {
+                console.log("Servidor corriendo en el puerto:",process.env.DEFAULT_PORT);
+            });
+        }
+       
     }
 }
 

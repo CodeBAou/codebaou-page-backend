@@ -6,8 +6,6 @@ const contactoPost = async (req=request, res=response) => {
 
     const body = req.body.data;
     
-   
-    
     /* CONFIGURACION SMTP
     Para gmail:
         - activar verificacion en dos pasos
@@ -30,7 +28,7 @@ const contactoPost = async (req=request, res=response) => {
     const data = {
         from: body.emisor, // sender address
         to: 'borisafuy@gmail.com', // list of receivers
-        subject: "codebaoupage - NEW MENSAJE✔  /n" + body.emisor, // Subject line
+        subject: "codebaoupage    -          NEW MENSAJE✔      de       " + body.emisor, // Subject line
         text: body.mensaje, // plain "Hello world?"
     };
 
