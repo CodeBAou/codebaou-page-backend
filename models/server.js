@@ -66,19 +66,9 @@ class Server{
 
     //Este Método pone el servidor en escucha
     listen(){
-
-        if(process.env.HOSTING === 'AWS'){
-            //Variables de AWS, En AWS existe una variable PORT en el puerto al que el servidor proxy pasa el tráfico. 
-            this.app.listen( process.env.PORT, () => {
-                console.log("Servidor corriendo en el puerto:",process.env.PORT);
-            });
-        }else{//Configuracion para entorno dev local
-            //Puerto por defecto
-            this.app.listen( process.env.DEFAULT_PORT, () => {
-                console.log("Servidor corriendo en el puerto:",process.env.DEFAULT_PORT);
-            });
-        }
-       
+        this.app.listen( process.env.PORT, () => {
+            console.log("Servidor corriendo en el puerto:", process.env.PORT);
+        });
     }
 }
 
