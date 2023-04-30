@@ -39,10 +39,7 @@ class Server {
     //Middlewares , se configura el servidor
     middlewares() {
         const cors = require('cors');
-        const corsOptions = {
-           origin: "*",
-           methods: 'GET,PUT,POST,DELETE'
-        }
+      
         //cabeceras http
         this.app.use(cors());
 
