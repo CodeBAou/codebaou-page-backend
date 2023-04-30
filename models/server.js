@@ -3,7 +3,6 @@ const cors            = require('cors');   //paquete cors - npm , configuracion 
 const {Conexiondb}    = require('../database/config');
 const { GoogleIdentity, verificaPermiso } = require('../middlewares/Identity/jwt');
 
-
 class Server{
 
     constructor(){
@@ -26,14 +25,14 @@ class Server{
     //Rutas de nuestra Api, llamamos al objecto router y no a un middleware
     routes(){
         //Se confugura la rutas que se deben utilizar en nuestra api
-        this.app.use('/api/contacto', require( '../routes/contacto.routes' ) ); //Apartado Contacto
-        this.app.use('/api/notas', require('../routes/notas.routes'));  //Apartado Notas
-        this.app.use('/api/disenos', require('../routes/diseño.routes'));//Apartado Deseños
-        this.app.use('/api/proyectos', require('../routes/proyectos.routes')); //Apartado proyectos
+        this.app.use('/api/contacto',cors() ,require( '../routes/contacto.routes' ) ); //Apartado Contacto
+        this.app.use('/api/notas',cors(), require('../routes/notas.routes'));  //Apartado Notas
+        this.app.use('/api/disenos', cors(), require('../routes/diseño.routes'));//Apartado Deseños
+        this.app.use('/api/proyectos', cors(),require('../routes/proyectos.routes')); //Apartado proyectos
         //this.app.use('/private', require('../routes/private.routes'));
-        this.app.use('/auth', require('../routes/auth'));
-        this.app.use('/private/post',require('../routes/post.routes'));
-        this.app.use('/private/section',require('../routes/section.routes'));
+        this.app.use('/auth', cors(), require('../routes/auth'));
+        this.app.use('/private/post', cors(),require('../routes/post.routes'));
+        this.app.use('/private/section', cors(),require('../routes/section.routes'));
     }  
 
     //Middlewares , se configura el servidor

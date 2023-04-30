@@ -22,8 +22,6 @@ const obtenerNota = async(req=request, res=response) => {
 
 const obtenerNotas = async ( req=request, res=response ) => {
 
-  
-
     try{
         await model_notas.find({}).skip(req.query.desde).limit(req.params.limite) //skip -> empieza en 0
         .then( notas => {
