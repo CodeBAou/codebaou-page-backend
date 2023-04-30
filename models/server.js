@@ -40,12 +40,11 @@ class Server {
     middlewares() {
         const cors = require('cors');
         const corsOptions = {
-            origin: process.env.API,
-            credentials: true,            //access-control-allow-credentials:true
-            optionSuccessStatus: 200
+           origin: "*",
+           methods: 'GET,PUT,POST,DELETE'
         }
         //cabeceras http
-        this.app.use(cors(corsOptions));
+        this.app.use(cors());
 
         //Control de errores
         this.app.use(function (err, req, res, next) {
