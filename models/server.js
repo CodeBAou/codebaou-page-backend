@@ -75,7 +75,7 @@ class Server {
     //Este Método pone el servidor en escucha
     listen() {
         this.app.listen(process.env.PORT, () => {
-            console.log("Servidor corriendo en el puerto:", process.env.PORT);
+            console.log("Servidor corriendo en el puerto:", process.env.PORT || 30001);
         });
     }
 }
