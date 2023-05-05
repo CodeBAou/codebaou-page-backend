@@ -59,9 +59,9 @@ let VerificaJWT = async (token) => {
 }
 
 //guardado para pruebas
-const fnAuxiliar = async (res,data) => {
+const fnAuxiliar = async (req=request,res=response) => {
 
-    const {user,pass} = data;
+    const {user,pass} = req.body;
     const model       = new model_auth({
         user:user,
         pass:Crypto.MD5(pass)
@@ -111,5 +111,6 @@ const verificaPermiso = async (req=request,res=response, next) =>{
 module.exports = {
     Identity,
     VerificaJWT,
-    verificaPermiso 
+    verificaPermiso,
+    fnAuxiliar
 }

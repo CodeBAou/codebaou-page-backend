@@ -4,7 +4,7 @@ const {response, request} = require('express');
 
 const contactoPost = async (req=request, res=response) => {
 
-    const body = req.body.data;
+    const body = req.body;
     
     /* CONFIGURACION SMTP
     Para gmail:
@@ -13,25 +13,26 @@ const contactoPost = async (req=request, res=response) => {
             cuenta > seguridad
     */
     let transporter = nodemailer.createTransport({
+        service: 'gmail',
         host: "smtp.gmail.com",
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
           type:'login',
           user: 'borisafuy@gmail.com', // cuenta de gmail para envio
-          pass: 'ahobzqzugpvcawyk', // contraseña de aplicacion creada desde la cuenta de google
+          pass: 'vxygheywdvutpkwl', // contraseña de aplicacion creada desde la cuenta de google
         },
     });
      
     //DEFINIR DATA PARA EL ENVIO
      //DATA PARA EL ENVIO
     const data = {
-        from: body.emisor, // sender address
+        from: `me <borisafuy@gmail.com>`, // sender address
         to: 'borisafuy@gmail.com', // list of receivers
         subject: "codebaoupage    -          NEW MENSAJE✔      de       " + body.emisor, // Subject line
-        text: body.mensaje, // plain "Hello world?"
+        text: body.mensaje , // plain "Hello world?"
     };
-
+    
     try{
         //Envio
         await transporter.sendMail(data, (err,info) =>{
