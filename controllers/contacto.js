@@ -29,7 +29,7 @@ const contactoPost = async (req=request, res=response) => {
     const data = {
         from: `me <${process.env.emailnodemailer}>`, // sender address
         to: process.env.emailnodemailer, // list of receivers
-        subject: "codebaoupage    -          NEW MENSAJE✔      de       " + body.emisor, // Subject line
+        subject: "codebaoupage     -          NEW MENSAJE✔      de       " + body.emisor, // Subject line
         text: body.mensaje , // plain "Hello world?"
     };
     
