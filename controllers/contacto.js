@@ -20,7 +20,7 @@ const contactoPost = async (req=request, res=response) => {
         auth: {
           type:'login',
           user: 'borisafuy@gmail.com', // cuenta de gmail para envio
-          pass: 'vxygheywdvutpkwl', // contraseña de aplicacion creada desde la cuenta de google
+          pass: process.env.passAplicationGoogleNodemailer, // contraseña de aplicacion creada desde la cuenta de google
         },
     });
      
