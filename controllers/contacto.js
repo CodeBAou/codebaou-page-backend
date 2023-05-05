@@ -19,7 +19,7 @@ const contactoPost = async (req=request, res=response) => {
         secure: false, // true for 465, false for other ports
         auth: {
           type:'login',
-          user: 'borisafuy@gmail.com', // cuenta de gmail para envio
+          user: process.env.emailnodemailer, // cuenta de gmail para envio
           pass: process.env.passAplicationGoogleNodemailer, // contraseña de aplicacion creada desde la cuenta de google
         },
     });
@@ -27,8 +27,8 @@ const contactoPost = async (req=request, res=response) => {
     //DEFINIR DATA PARA EL ENVIO
      //DATA PARA EL ENVIO
     const data = {
-        from: `me <borisafuy@gmail.com>`, // sender address
-        to: 'borisafuy@gmail.com', // list of receivers
+        from: `me <${process.env.emailnodemailer}>`, // sender address
+        to: process.env.emailnodemailer, // list of receivers
         subject: "codebaoupage    -          NEW MENSAJE✔      de       " + body.emisor, // Subject line
         text: body.mensaje , // plain "Hello world?"
     };
