@@ -1,14 +1,30 @@
 const {Schema, model} = require('mongoose');
 
 const PostSchema = Schema({
-    pertenece:{
+    titulo:{
         type:String,
-        required:[true,'Se necesita el id de la miniatura']
+        required:[true,'Se necesita el titulo del post']
     },
-    data_publicacion:{
+    descripcion:{
+        type:String,
+        required:[true,'Se necesita una descripcion']
+    },
+    data:{
         type:Date,
         default:Date.now()
+    },
+    miniatura:{
+        type:String,
+        required:[true,'Se necesita una miniatura']
+    },
+    enlace:{
+        type:String,
+        required:[false]
+    },
+    tags:{
+        type:String,
+        required:[false]
     }
 });
 
-module.exports = model('Posts', PostSchema);
+module.exports = model('Post', PostSchema);

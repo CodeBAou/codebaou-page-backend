@@ -1,12 +1,8 @@
 const express = require('express');   //paquete express - npm , servidor web en node
 const cors = require('cors');   //paquete cors - npm , configuracion rapida de cabeceras http
 const { Conexiondb } = require('../database/config');
-const { GoogleIdentity, verificaPermiso } = require('../middlewares/Identity/jwt');
-
 
 class Server {
-
-
     constructor() {
 
         //Se Inicia la instancia de express
@@ -26,16 +22,8 @@ class Server {
 
     //Rutas de nuestra Api, llamamos al objecto router y no a un middleware
     routes() {
-        //Se confugura la rutas que se deben utilizar en nuestra api
-
-        this.app.use('/api/contacto', require('../routes/contacto.routes')); //Apartado Contacto
-        this.app.use('/api/notas', require('../routes/notas.routes'));  //Apartado Notas
-        this.app.use('/api/disenos', require('../routes/diseño.routes'));//Apartado Deseños
-        this.app.use('/api/proyectos', require('../routes/proyectos.routes')); //Apartado proyectos
         //this.app.use('/private', require('../routes/private.routes'));
-        this.app.use('/auth', require('../routes/auth'));
-        this.app.use('/private/post', require('../routes/post.routes'));
-        this.app.use('/private/section', require('../routes/section.routes'));
+        this.app.use('/codebaouapi/post', require('../routes/post.routes'));
     }
 
     //Middlewares , se configura el servidor
@@ -65,11 +53,6 @@ class Server {
 
         //Pasar el body a Json
         this.app.use(express.json());
-
-        //Acceder al apartado publico (No es necesario tener auth)    - Servir pagina Estática
-        this.app.use('/', express.static('public'));
-        //Aceder al apartado privado (se necesita tener el token jwt para que funcione)     - Sevir Pagina Estática
-
     }
 
     //Este Método pone el servidor en escucha

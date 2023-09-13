@@ -11,4 +11,4 @@ const authSchema = new Schema({
     }
 });
 
-module.exports = model('auths',authSchema);
+module.exports = model('Users',authSchema);
