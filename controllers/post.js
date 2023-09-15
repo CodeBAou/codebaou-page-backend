@@ -1,6 +1,6 @@
 const {response,request} =require('express');
 const {model_post, model_section} = require('../models');
-const {isValidObjectId} = require('../FucionesAuxiliares/fnaux');
+const {isValidObjectId} = require('../FuncionesAuxiliares/fnaux');
 
 //Crea un nuevo post en la base de datos y todas las secciones que les pertenece si es necesario
 
@@ -13,11 +13,11 @@ const {isValidObjectId} = require('../FucionesAuxiliares/fnaux');
 
 const crearPost = async (req=request, res=response) => {
 
-    const post          = req.body.post;
-    const sections      = req.body.sections;
+    const post         = req.body.post;
+    const sections     = req.body.sections;
     
-    let save_post     = new model_post(post);
-    save_post.data = new Date();
+    let save_post      = new model_post(post);
+    save_post.data     = new Date();
 
     let post_error     = null;
     let post_result    = null;
@@ -31,7 +31,7 @@ const crearPost = async (req=request, res=response) => {
             if(err) res.status(500).json({
                 msg:"Error al intentar guardar post",
                 err:err
-            })
+            });
 
             let sections_aux = null ;
 
@@ -76,7 +76,7 @@ const crearPost = async (req=request, res=response) => {
             msg:"Se ha creado un nuevo post",
             post:post_result,
             section:section_result
-        })
+        });
 
     }catch(error){
         console.log(error);
@@ -243,7 +243,6 @@ module.exports = {
     crearPost,
     actualizarPost,
     eliminaPost,
-    eliminarALLpost,
     actualizarSection,
     crearSeccion
 }

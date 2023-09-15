@@ -1,13 +1,17 @@
 const {Schema, model} = require('mongoose');
 
 const authSchema = new Schema({
-    user:{
+    email:{
         type:String,
         required:[true,'Se necesita un nombre de usuario']
     },
-    pass:{
+    nombre:{
         type:String,
         required:[true,'Se necesita una contraseña']
+    },
+    role:{
+        type:Number,
+        required:[true,'Es necesario indicar un numero de rol de usuario']
     }
 });
 

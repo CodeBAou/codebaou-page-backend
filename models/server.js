@@ -1,5 +1,5 @@
-const express = require('express');   //paquete express - npm , servidor web en node
-const cors = require('cors');   //paquete cors - npm , configuracion rapida de cabeceras http
+const express        = require('express');   //paquete express - npm , servidor web en node
+const cors           = require('cors');   //paquete cors - npm , configuracion rapida de cabeceras http
 const { Conexiondb } = require('../database/config');
 
 class Server {
@@ -24,11 +24,14 @@ class Server {
     routes() {
         //this.app.use('/private', require('../routes/private.routes'));
         this.app.use('/codebaouapi/post', require('../routes/post.routes'));
+        this.app.use('/codebaouapi/auth',require('../routes/auth.routes'));
     }
 
     //Middlewares , se configura el servidor
     middlewares() {
+
         const cors = require('cors');
+
         var corsOptions = {
             origin: '*',
             optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -38,7 +41,7 @@ class Server {
         this.app.use(cors());
 
         //Control de errores
-        this.app.use(function (err, req, res, next) {
+        this.app.use( function (err, req, res, next) {
 
             console.error(err.stack, " ::middleware::");
 
