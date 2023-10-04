@@ -4,37 +4,43 @@ const {model_users} = require('../models');
 
 const login = async( req=request, res=response) => {
 
+    
     const user  = req.body.user;
-    const userdb = await model_users.findOne({email:user.email}).exec();
+    
+    try{
 
-    if(userdb){
+        const userdb = await model_users.find({email: user.email}).exec();
 
-        
+        if(userdb){
 
-        //Se crea token jwt
-        const token =  jwt.sign({
-            exp: Math.floor(Date.now() / 1000) + (60 * 60),
-            data: user
-          },process.env.SECRET_JWT ,   ( err ,  decodificado ) =>  { 
-            if  ( err )  { 
-              console.log(err)
-            }
+            //Se crea token jwt
+            const token =  jwt.sign({
+                exp: Math.floor(Date.now() / 1000) + (60 * 60),
+                data: user
+            },process.env.SECRET_JWT ,   ( err ,  jwt) =>  { 
+                if  ( err )  { 
+                    console.log(err)
+                }   
+
+                res.status(200).json({
+                    msg:"Se ha encontrado el usuario 2",
+                    role:1,
+                    token:jwt
+                });
+                
             } );
-       
-
-        res.status(200).json({
-            msg:"Se ha encontrado el usuario ",
-            role:1,
-            token:token
-        });
+    
+        }
+        else{
+            res.status(200).json({
+                msg:"No se ha encontrado el usuario",
+                token:null
+            });
+        }
+    
+    }catch(err){
+        res.status(400).json({msg:"user.email undefined"});
     }
-    else{
-        res.status(200).json({
-            msg:"No se ha encontrado el usuario",
-            token:null
-        });
-    }
-   
 }
 
 module.exports = {login};

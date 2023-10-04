@@ -1,15 +1,42 @@
-const {response,request} =require('express');
+const {response,request}          = require('express');
 const {model_post, model_section} = require('../models');
-const {isValidObjectId} = require('../FuncionesAuxiliares/fnaux');
+const {isValidObjectId}           = require('../FuncionesAuxiliares/fnaux');
 
-//Crea un nuevo post en la base de datos y todas las secciones que les pertenece si es necesario
-
-/**
-* Utiliza dos collections
+/**Guarda los datos del post y sus secciones
+ * 
+*  Utiliza dos collections
 *      - Collection posts : almacena propiedades del post 
 *      - Collection sections : almacena las secciones  ( Model.insertMany() )
+*
+*   Ejemplo data que se envia en el body
+            * {
+                "post": {
+                    "titulo":"",
+                    "descripcion":"",
+                    "data":"",
+                    "miniatura":"",
+                    "enlace":"",
+                    "tags":"<string> , <string>, <string>, ... "
+                },
+                "sections": [
+                    {
+                        "post":"",
+                        "parrafo":"",
+                        "img":"",
+                        "order":1,
+                        "type":1
+                    },
+                    {
+                        "post":"",
+                        "parrafo":"",
+                        "img":"",
+                        "order":2,
+                        "type":2
+                    }
+                ]
+            }
+* 
 */
-
 
 const crearPost = async (req=request, res=response) => {
 
@@ -23,7 +50,8 @@ const crearPost = async (req=request, res=response) => {
     let post_result    = null;
     let section_error  = null;
     let section_result = null; 
-    
+
+
     try{
         //Se almacena el post
         await save_post.save( ( err, result_post ) => {
@@ -38,26 +66,30 @@ const crearPost = async (req=request, res=response) => {
             if(result_post){
 
                 sections_aux = sections.map((section) => {
-                    let sectionaux = section;
+                    let sectionaux  = section;
                     sectionaux.post = result_post._id;
                     return sectionaux;
                 });
 
                 //Se almacenan las secciones
                 model_section.insertMany(sections_aux)
-                .then( result_section => res.status(200).json({
-                    msg:"Se ha guardado el post correctamente",
-                    post: result_post,
-                    sections: result_section
-                }))
-                .catch( err => {//Error al guardar las secciones y se intenta eliminar el post guardado anteriormente
+                .then( result_section => {
+
+                    res.status(200).json({
+                        msg:"Se ha guardado el post correctamente",
+                        post: result_post,
+                        sections: result_section
+                    });
+                })
+                .catch( errsectionssave => {//Error al guardar las secciones y se intenta eliminar el post guardado anteriormente
                     
-                    save_post.delete() 
+                    model_post.deleteMany({post:result_post._id}) 
                     .then( res => res.status(500).json({
                         msg:"Se ha producido un error al guardar el nuevo post"
                     }))
                     .catch(err => {
                         res.status(500).json({
+                            errsavesection:errsectionssave,
                             msg:"Se ha producido un error al intentar eliminar el post al detectar error al eliminar sus secciones"
                         });
                     });
@@ -79,6 +111,7 @@ const crearPost = async (req=request, res=response) => {
         });
 
     }catch(error){
+
         console.log(error);
         res.status(500).json({
             msg:'Se ha producido un error en el servidor al crear un nuevo post',
@@ -89,13 +122,14 @@ const crearPost = async (req=request, res=response) => {
 }
 /**
  * Crea una nueva seccion para un post
- * determina el post al que pertenece con la propiedad post 'post:' del json
+ * determina el post al que pertenece con la propiedad post '{post:<id>}' del json
  */
 const crearSeccion = async( req=request, res=response) => {
 
     if( isValidObjectId(req.body.post) == false) {
         res.status(500).json({"msg":"El objecto id no es ObjectId de mongo"})
     }else{
+
         const nuevaSeccion = new model_section(req.body);
 
         nuevaSeccion.save( (err, result) => {
@@ -119,8 +153,9 @@ const crearSeccion = async( req=request, res=response) => {
 const obtenerPost = async(req=request, res=response) => {
     
     const id = req.params.id;
-    console.log(id);
+    
     try{
+        
         await model_post.find({_id:`${id}`})
         .then( post => {
             res.status(200).json(post);
@@ -128,6 +163,7 @@ const obtenerPost = async(req=request, res=response) => {
         .catch( err => {
             res.status(500).json(err);
         });
+
     }catch(err){
         res.status(500).json({
             msg:'Se ha producido un error en el servidor',
@@ -141,12 +177,14 @@ const obtenerPost = async(req=request, res=response) => {
 const obtenerPosts = async(req=request, res=response) => {
 
     const {desde,limite} = req.query;
-    console.log(desde,limite);
+    
     try{
         await model_post.find().skip(desde).limit(limite)
         .then( posts => {
             if(!posts) res.status(200).json( {msg:'No se encontro ningun post'});
-            if(posts) res.status(200).json(posts);
+            if(posts) res.status(200).json({
+                data:posts
+            });
         })
         .catch( err => {
             res.status(500).json({
@@ -154,6 +192,7 @@ const obtenerPosts = async(req=request, res=response) => {
                 err
             });
         });
+
     }catch(err){
         res.status(500).json({
             msg:'Se ha producido un error en el servidor',
@@ -237,6 +276,16 @@ const eliminaPost = async (req=request, res=response) => {
 
 }
 
+//Obtienes secciones por el id del post al que pertenece
+const getSections = async (req=request, res=response) => {
+
+    const id = req.params.id;
+
+    await model_section.find({post:id})
+    .then(result => res.status(200).json(result))
+    .catch( err => console.log(err));
+}
+
 module.exports = {
     obtenerPost,
     obtenerPosts,
@@ -244,5 +293,6 @@ module.exports = {
     actualizarPost,
     eliminaPost,
     actualizarSection,
-    crearSeccion
+    crearSeccion,
+    getSections 
 }

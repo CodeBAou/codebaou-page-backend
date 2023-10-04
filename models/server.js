@@ -24,6 +24,7 @@ class Server {
     routes() {
         //this.app.use('/private', require('../routes/private.routes'));
         this.app.use('/codebaouapi/post', require('../routes/post.routes'));
+        this.app.use('/codebaouapi/estadistica',require('../routes/estadistica.routes'));
         this.app.use('/codebaouapi/auth',require('../routes/auth.routes'));
     }
 

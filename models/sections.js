@@ -4,7 +4,7 @@ const SectionSchema = Schema({
     post:{
         type:Types.ObjectId
     },
-    parrafo:{
+    text:{
         type:String,
         required:[false]
     },
@@ -19,7 +19,7 @@ const SectionSchema = Schema({
     order:{
         type:Number,
         required:[true,"Se necesita un numero de orden"],
-        unique:true 
+        unique:false
     }
 });
 
