@@ -16,7 +16,8 @@ const {isValidObjectId}           = require('../FuncionesAuxiliares/fnaux');
                     "data":"",
                     "miniatura":"",
                     "enlace":"",
-                    "tags":"<string> , <string>, <string>, ... "
+                    "tags":"<string> , <string>, <string>, ... ",
+                    "destacados": boolean
                 },
                 "sections": [
                     {
@@ -40,11 +41,13 @@ const {isValidObjectId}           = require('../FuncionesAuxiliares/fnaux');
 
 const crearPost = async (req=request, res=response) => {
 
-    const post         = req.body.post;
-    const sections     = req.body.sections;
+    const post             = req.body.post;
+    const sections         = req.body.sections;
     
-    let save_post      = new model_post(post);
-    save_post.data     = new Date();
+    let save_post          = new model_post(post);
+    save_post.data         = new Date();
+    save_post.destacado    = false;
+    save_post.orderDestaco = false;
 
     let post_error     = null;
     let post_result    = null;
@@ -286,6 +289,60 @@ const getSections = async (req=request, res=response) => {
     .catch( err => console.log(err));
 }
 
+const destacados = async (req=request, res=response) => {
+    await model_post.find({destacado:true})
+    .then(result => res.status(200).json(result))
+    .catch( err => {
+        console.log(err);
+        res.status(300).json({err:err});
+    });
+}
+ 
+const saveDestacados = async (req=request, res=response) => {
+
+    const data = req.body;
+
+   
+    // Buscar todos los documentos y actualizar destacados = false
+    try {
+
+        const filtro        = { destacado: true };
+        const actualizacion = {
+        $set: { destacado: false }
+        };
+        
+        const resultado = await model_post.updateMany(filtro, actualizacion);
+
+            //Actualizar documentos indicados por el usuario y cambiar destacados = true
+        const postUser1 = await model_post.updateMany(
+            { _id : req.body[0]._id }, 
+            { $set:{destacado : true, orderDestacado : 1} }
+        );
+        
+         //Actualizar documentos indicados por el usuario y cambiar destacados = true
+        const postUser2 = await model_post.updateMany(
+            { _id : req.body[1]._id }, 
+            { $set:{destacado : true, orderDestacado : 2} }
+        );
+
+        //Actualizar documentos indicados por el usuario y cambiar destacados = true
+        const postUser3 = await model_post.updateMany(
+            { _id : req.body[2]._id }, 
+            { $set:{destacado : true, orderDestacado : 3} }
+        );
+
+        res.status(200).json({msg:"Se ha actualizado los posts destacados"});
+       
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            msg: "Error en la consulta con la base de datos"
+        });
+    }
+      
+}
+    
+
 module.exports = {
     obtenerPost,
     obtenerPosts,
@@ -294,5 +351,7 @@ module.exports = {
     eliminaPost,
     actualizarSection,
     crearSeccion,
-    getSections 
+    getSections,
+    destacados,
+    saveDestacados
 }

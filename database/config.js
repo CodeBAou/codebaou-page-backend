@@ -5,6 +5,9 @@ const Conexiondb= async () => {
 
     .then(()=> console.log('conexion mongo OK')) 
     .catch(e => console.log('error de conexión', e))
+
+    mongoose.set('strictQuery', false);
+
 }
 
 module.exports = { Conexiondb}

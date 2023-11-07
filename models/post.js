@@ -24,6 +24,14 @@ const PostSchema = Schema({
     tags:{
         type:String,
         required:[false]
+    },
+    destacado:{
+        type:Boolean,
+        required:[false]
+    },
+    orderDestacado:{
+        type:Number,
+        required:[false]
     }
 });
 

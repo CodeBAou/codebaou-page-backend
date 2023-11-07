@@ -26,6 +26,7 @@ class Server {
         this.app.use('/codebaouapi/post', require('../routes/post.routes'));
         this.app.use('/codebaouapi/estadistica',require('../routes/estadistica.routes'));
         this.app.use('/codebaouapi/auth',require('../routes/auth.routes'));
+        this.app.use('/codebaouapi/destacados',require('../routes/destacados.routes'));
     }
 
     //Middlewares , se configura el servidor
