@@ -19,15 +19,6 @@
         "PORT": "3001",
         "PRIVATEKEYJWT": "abBs2Nm5yq",
         "MONGODB_URI": "mongodb+srv://codebau:ITCK8H2VXBXtY9xi@db-codebaou-page.izcoetd.mongodb.net/codebaou-page"
-    },
-    "builds": [
-        {
-            "src": "*.html",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "*.js",
-            "use": "@vercel/node"
-        }
-    ]
+    }
+  
 }

@@ -3,6 +3,8 @@ const cors           = require('cors');   //paquete cors - npm , configuracion r
 const { Conexiondb } = require('../database/config');
 
 class Server {
+
+    
     constructor() {
 
         //Se Inicia la instancia de express
@@ -13,6 +15,8 @@ class Server {
         this.middlewares();
         //Rutas 
         this.routes();
+
+        this.port = process.env.PORT || 3005;
     }
 
     //Conecta el Servidor a la base de datos
@@ -63,7 +67,7 @@ class Server {
     //Este Método pone el servidor en escucha
     listen() {
         this.app.listen(process.env.PORT, () => {
-            console.log("Servidor corriendo en el puerto:", process.env.PORT || 3001);
+            console.log("Servidor corriendo en el puerto:", );
         });
     }
 }
