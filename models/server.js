@@ -16,7 +16,7 @@ class Server {
         //Rutas 
         this.routes();
 
-        this.port = process.env.PORT || 3005;
+        this.port = process.env.PORT || 8080;
     }
 
     //Conecta el Servidor a la base de datos
