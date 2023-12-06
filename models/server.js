@@ -16,7 +16,7 @@ class Server {
         //Rutas 
         this.routes();
 
-        this.port = process.env.PORT || 8080;
+        this.port = process.env.PORT || 3005;
     }
 
     //Conecta el Servidor a la base de datos
@@ -67,7 +67,7 @@ class Server {
     //Este Método pone el servidor en escucha
     listen() {
         this.app.listen(process.env.PORT, () => {
-            console.log("Servidor corriendo en el puerto:", );
+            console.log("Servidor corriendo en el puerto:", this.port);
         });
     }
 }

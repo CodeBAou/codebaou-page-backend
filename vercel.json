@@ -1,25 +1,15 @@
 {
-    "version": 2,
-    "builds": [
+    "builds":[
         {
-            "src": "./app.js",
-            "use": "@now/node-server"
+            "src":"./index.js",
+            "use":"@vercel/node"
         }
     ],
-    "routes": [
-        {
-            "handle": "filesystem"
-        },
-        {
-            "src": "/.*",
-            "dest": "app.js"
-        }
-    ],
-    "env": {
-        "PORT": "3001",
-        "PRIVATEKEYJWT": "abBs2Nm5yq",
-        "MONGODB_URI": "mongodb+srv://codebau:ITCK8H2VXBXtY9xi@db-codebaou-page.izcoetd.mongodb.net/codebaou-page",
-        "SECRET_JWT":"30LV6HdsaO1RRksFvZJRdISECRET_JWT=30LV6HdsaO1RRksFvZJRdI"
-    }
-  
+        "routes":[
+            {
+                "src":"/(.*)",
+                "dest":"/"
+            }
+        ]
+    
 }
