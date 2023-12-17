@@ -9,6 +9,9 @@ const authSchema = new Schema({
         type:String,
         required:[true,'Se necesita una contraseña']
     },
+    token:{
+
+    },
     role:{
         type:Number,
         required:[true,'Es necesario indicar un numero de rol de usuario']

@@ -4,14 +4,13 @@ const {model_users} = require('../models');
 
 const login = async( req=request, res=response) => {
 
-    
     const user  = req.body.user;
-    
+   
     try{
 
-        const userdb = await model_users.find({email: user.email}).exec();
-
-        if(userdb){
+        const userdb = await model_users.findOne({email: user.email}).exec();
+       
+        if(userdb != null && user.email === userdb.email){
 
             //Se crea token jwt
             const token =  jwt.sign({
