@@ -39,90 +39,52 @@ const {isValidObjectId}           = require('../FuncionesAuxiliares/fnaux');
 * 
 */
 
-const crearPost = async (req=request, res=response) => {
-
-    const post             = req.body.post;
-    const sections         = req.body.sections;
-    
-    let save_post          = new model_post(post);
-    save_post.data         = new Date();
-    save_post.destacado    = false;
-    save_post.orderDestaco = false;
-
-    let post_error     = null;
-    let post_result    = null;
-    let section_error  = null;
-    let section_result = null; 
-
-
-    try{
-        //Se almacena el post
-        await save_post.save( ( err, result_post ) => {
-
-            if(err) res.status(500).json({
-                msg:"Error al intentar guardar post",
-                err:err
-            });
-
-            let sections_aux = null ;
-
-            if(result_post){
-
-                sections_aux = sections.map((section) => {
-                    let sectionaux  = section;
-                    sectionaux.post = result_post._id;
-                    return sectionaux;
-                });
-
-                //Se almacenan las secciones
-                model_section.insertMany(sections_aux)
-                .then( result_section => {
-
-                    res.status(200).json({
-                        msg:"Se ha guardado el post correctamente",
-                        post: result_post,
-                        sections: result_section
-                    });
-                })
-                .catch( errsectionssave => {//Error al guardar las secciones y se intenta eliminar el post guardado anteriormente
-                    
-                    model_post.deleteMany({post:result_post._id}) 
-                    .then( res => res.status(500).json({
-                        msg:"Se ha producido un error al guardar el nuevo post"
-                    }))
-                    .catch(err => {
-                        res.status(500).json({
-                            errsavesection:errsectionssave,
-                            msg:"Se ha producido un error al intentar eliminar el post al detectar error al eliminar sus secciones"
-                        });
-                    });
-
-                });
-            }
+const crearPost = async (req = request, res = response) => {
+    const post = req.body.post;
+    const sections = req.body.sections;
+    console.log(post);
+  
+    try {
+      // Se almacena el post
+      const result_post = await new model_post(post).save();
+  
+      // Se actualiza el post con los campos adicionales
+      result_post.data = new Date();
+      result_post.destacado = false;
+      result_post.orderDestaco = false;
+  
+      // Se almacenan las secciones
+      const sections_aux = sections.map((section) => ({
+        ...section,
+        post: result_post._id,
+      }));
+  
+      const result_section = await model_section.insertMany(sections_aux);
+  
+      res.status(200).json({
+        msg: "Se ha guardado el post correctamente",
+        post: result_post,
+        sections: result_section,
+      });
+    } catch (error) {
+      console.log(error);
+  
+      if (error.name === "ValidationError") {
+        // Manejar errores de validación de Mongoose
+        res.status(400).json({
+          msg: "Error de validación al intentar guardar el post",
+          err: error.errors,
         });
-    
-        if(post_error && section_error) res.json(500).res( {
-            msg:"Error al almacenar el nuevo post",
-            post_error:post_error,
-            section_error:section_error
-        });
-
-        if(post_result && section_result ) res.json(200).res({
-            msg:"Se ha creado un nuevo post",
-            post:post_result,
-            section:section_result
-        });
-
-    }catch(error){
-
-        console.log(error);
+      } else {
+        // Otros errores
         res.status(500).json({
-            msg:'Se ha producido un error en el servidor al crear un nuevo post',
-            err:error
+          msg: "Se ha producido un error en el servidor al crear un nuevo post",
+          err: error,
         });
+      }
     }
-    
-}
+  };
+  
 /**
  * Crea una nueva seccion para un post
  * determina el post al que pertenece con la propiedad post '{post:<id>}' del json
